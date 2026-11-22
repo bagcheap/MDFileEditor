@@ -1,0 +1,32 @@
+# Weekly update PRs. The cooldown mirrors pnpm's minimumReleaseAge: brand-new
+# releases are not proposed until they've been public for a week.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      npm-dev:
+        dependency-type: development
+      npm-prod:
+        dependency-type: production
+
+  - package-ecosystem: cargo
+    directory: /apps/app/src-tauri
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      cargo:
+        patterns: ['*']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7

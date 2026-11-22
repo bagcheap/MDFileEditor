@@ -1,0 +1,23 @@
+packages:
+  - apps/*
+  - packages/*
+
+# --- Supply-chain guards (see SECURITY.md §1) ---
+
+# Refuse package versions published less than 7 days ago (in minutes).
+minimumReleaseAge: 10080
+
+# Fail installs when a package's trust evidence (e.g. provenance) is weaker
+# than for versions published before it.
+trustPolicy: no-downgrade
+
+# Dependency install scripts are blocked unless listed here with a reason.
+strictDepBuilds: true
+onlyBuiltDependencies: []
+
+# Temporary security overrides. Remove each once the parent package ships the fix
+# and that release passes minimumReleaseAge.
+overrides:
+  # GHSA-g3hv-75wg-m249 (moderate, ReDoS-style DoS). Dev-only (linter).
+  # Fixed upstream in typescript-eslint 8.73.0.
+  '@typescript-eslint/typescript-estree>minimatch': '^11.0.1'

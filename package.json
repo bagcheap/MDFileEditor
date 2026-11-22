@@ -1,0 +1,34 @@
+{
+  "name": "md-file-editor",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @mdedit/app dev",
+    "build": "pnpm -r build",
+    "desktop:dev": "pnpm --filter @mdedit/app tauri dev",
+    "desktop:build": "pnpm --filter @mdedit/app tauri build",
+    "desktop:build:universal": "pnpm --filter @mdedit/app tauri build --target universal-apple-darwin",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm -r typecheck",
+    "test": "vitest run",
+    "audit": "pnpm audit --prod --audit-level low",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.15.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.14.0",
+    "jsdom": "31.0.1",
+    "prettier": "3.10.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.2",
+    "vitest": "5.1.0"
+  }
+}

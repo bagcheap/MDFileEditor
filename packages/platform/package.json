@@ -1,0 +1,15 @@
+{
+  "name": "@mdedit/platform",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "2.12.4"
+  }
+}
