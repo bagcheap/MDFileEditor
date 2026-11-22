@@ -66,6 +66,6 @@ with the reason they're needed.
 
 ## 5. Review log
 
-| Date | Scope | Result |
-| ---- | ----- | ------ |
-| —    | —     | —      |
+| Date       | Scope                                                                            | Result                                                                                                                                                                                                                         |
+| ---------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-11-22 | Phase 0 (manual review: native commands, path allowlist, CSP, file decoding, CI) | No issues found. `pnpm audit` and `cargo deny` clean (one dev-only advisory in `minimatch` fixed via override). Carry-over for Phase 1: rendered links must open in the system browser and must never navigate the app window. |

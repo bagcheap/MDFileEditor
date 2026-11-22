@@ -17,6 +17,7 @@ working build on web and macOS.
 - [ ] remark/rehype rendering with CommonMark + GFM (tables, task lists, strikethrough, autolinks)
 - [ ] Syntax highlighting for code blocks
 - [ ] Sanitization, CSP, remote-image blocking
+- [ ] Links open in the system browser; the app window never navigates away
 - [ ] Light/dark theme, readable typography
 - [ ] PDF export (print stylesheet + native print)
 
