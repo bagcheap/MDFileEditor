@@ -6,6 +6,7 @@ A Markdown viewer and editor for macOS and the web, with live agent editing on t
   them as plain text (Source tab), saves, and exports to PDF. Try
   [examples/feature-tour.md](examples/feature-tour.md). See [docs/ROADMAP.md](docs/ROADMAP.md).
 - **Design:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- **Design guide:** [docs/DESIGN.md](docs/DESIGN.md)
 - **Security policy:** [SECURITY.md](SECURITY.md)
 
 ## Prerequisites (on each Mac)

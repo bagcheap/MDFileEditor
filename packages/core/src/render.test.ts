@@ -48,6 +48,11 @@ describe('renderMarkdown: formatting', () => {
     expect(out).toContain('<code>plain\n</code>')
   })
 
+  it('labels code blocks with their language', () => {
+    expect(html('```python\nx = 1\n```')).toContain('<pre data-language="python">')
+    expect(html('```\nplain\n```')).toContain('<pre><code>')
+  })
+
   it('shows embedded HTML as visible source instead of rendering or dropping it', () => {
     const block = html('<div class="note">Hello</div>')
     expect(block).toContain(

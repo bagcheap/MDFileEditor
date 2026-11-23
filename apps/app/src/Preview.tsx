@@ -2,6 +2,7 @@ import { useDeferredValue, useMemo, useRef, useState, type MouseEvent, type Reac
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime'
 import { toJsxRuntime } from 'hast-util-to-jsx-runtime'
 import { classifyLink, renderMarkdown } from '@mdedit/core'
+import { ImageIcon } from './ui/icons'
 
 interface PreviewProps {
   text: string
@@ -60,33 +61,40 @@ export function Preview({ text, openExternalUrl, onError }: PreviewProps) {
   }
 
   return (
-    <div className="preview-scroll">
-      {blockedRemoteImages > 0 && !allowRemoteImages && (
-        <div className="banner" role="status">
-          <span>
-            {blockedRemoteImages === 1
-              ? '1 image from the internet was not loaded, because loading it would let its host see that you opened this file.'
-              : `${String(blockedRemoteImages)} images from the internet were not loaded, because loading them would let their hosts see that you opened this file.`}
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              setAllowRemoteImages(true)
-            }}
-          >
-            Load images
-          </button>
-        </div>
-      )}
+    <div className="scroll-area">
       <article
         ref={articleRef}
         className="markdown-body"
         onClick={onLinkClick}
         onAuxClick={onLinkClick}
       >
+        {blockedRemoteImages > 0 && !allowRemoteImages && (
+          <aside className="notice" role="status">
+            <span className="notice-icon">
+              <ImageIcon />
+            </span>
+            <span className="notice-text">
+              {blockedRemoteImages === 1
+                ? '1 image from the internet was not loaded.'
+                : `${String(blockedRemoteImages)} images from the internet were not loaded.`}{' '}
+              <span className="notice-detail">
+                Loading images lets their host see that you opened this file.
+              </span>
+            </span>
+            <button
+              type="button"
+              className="button button-small"
+              onClick={() => {
+                setAllowRemoteImages(true)
+              }}
+            >
+              Load images
+            </button>
+          </aside>
+        )}
         {deferredText.trim() === '' ? (
           <p className="empty-hint">
-            Open a Markdown file (⌘O), or switch to <strong>Source</strong> to start writing.
+            This document is empty. Switch to <strong>Source</strong> to start writing.
           </p>
         ) : (
           content

@@ -15,10 +15,16 @@
       {
         "label": "main",
         "title": "MD File Editor",
-        "width": 1000,
-        "height": 750,
-        "minWidth": 480,
-        "minHeight": 320
+        "width": 1100,
+        "height": 800,
+        "minWidth": 560,
+        "minHeight": 400,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "trafficLightPosition": {
+          "x": 18,
+          "y": 26
+        }
       }
     ],
     "security": {

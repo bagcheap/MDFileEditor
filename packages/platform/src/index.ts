@@ -1,4 +1,5 @@
 import { invoke, isTauri } from '@tauri-apps/api/core'
+import { getCurrentWindow } from '@tauri-apps/api/window'
 import { createDesktopFs } from './desktop'
 import { desktopOpenExternalUrl, webOpenExternalUrl } from './shell'
 import type { FileSystemAccessWindow } from './web'
@@ -27,11 +28,22 @@ export function createDocumentFileSystem(win: Window = window): DocumentFileSyst
  */
 export function createPlatform(win: Window = window): Platform {
   const desktop = isTauri()
+  const isApple = /Mac|iPhone|iPad/.test(win.navigator.userAgent)
   return {
     files: createDocumentFileSystem(win),
     openExternalUrl: desktop ? desktopOpenExternalUrl(invoke) : webOpenExternalUrl(win),
     print: () => {
       win.print()
     },
+    setWindowTitle: (title) => {
+      win.document.title = title
+      // The page title doesn't reach the native window on its own.
+      if (desktop)
+        getCurrentWindow()
+          .setTitle(title)
+          .catch(() => undefined)
+    },
+    macTitleBarOverlay: desktop && isApple,
+    isApple,
   }
 }

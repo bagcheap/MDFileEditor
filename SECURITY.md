@@ -43,7 +43,8 @@ with the reason they're needed.
 - **Least-privilege native access (Tauri).** The web code cannot touch the file
   system directly. Only a few custom Rust commands are exposed, and they only
   read/write files the user picked in a native dialog this session. No `shell`
-  plugin, no general `fs` plugin.
+  plugin, no general `fs` plugin. The only built-in window permissions are cosmetic:
+  print, drag the window by its toolbar, double-click to zoom, and set the window title.
 - **No network by default.** No telemetry. Remote images are blocked unless enabled
   per document (the CSP permits `https:` images so that opt-in can work; the renderer
   enforces the default). Links open in the system browser after the URL is validated

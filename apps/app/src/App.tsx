@@ -2,9 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { flushSync } from 'react-dom'
 import type { Platform } from '@mdedit/platform'
 import { Preview } from './Preview'
+import { StatusBar } from './ui/StatusBar'
+import { Toast } from './ui/Toast'
+import { Toolbar, type View } from './ui/Toolbar'
+import { Welcome } from './ui/Welcome'
 import { useDocument } from './useDocument'
-
-type View = 'preview' | 'source'
 
 const confirmDiscard = () => window.confirm('Discard unsaved changes?')
 
@@ -24,6 +26,9 @@ export function App({ platform }: { platform: Platform }) {
     showPreview,
   )
 
+  // Nothing opened or typed yet: show the welcome screen instead of an empty page.
+  const isFresh = doc.id === 0 && doc.ref === null && doc.text === ''
+
   // Printing always prints the formatted view, whichever tab is showing.
   const exportPdf = useCallback(() => {
     flushSync(() => {
@@ -32,10 +37,11 @@ export function App({ platform }: { platform: Platform }) {
     platform.print()
   }, [platform])
 
-  // The page title becomes the suggested PDF file name.
+  // The title becomes the window title and the suggested PDF file name.
+  const { setWindowTitle } = platform
   useEffect(() => {
-    document.title = baseName(doc.name) || 'MD File Editor'
-  }, [doc.name])
+    setWindowTitle(isFresh ? 'MD File Editor' : baseName(doc.name) || 'MD File Editor')
+  }, [setWindowTitle, doc.name, isFresh])
 
   // Printing from the browser's own menu: switch to the formatted view first.
   useEffect(() => {
@@ -91,85 +97,68 @@ export function App({ platform }: { platform: Platform }) {
     [setError],
   )
 
+  const appClass = platform.macTitleBarOverlay ? 'app app-mac-overlay' : 'app'
+
   return (
-    <div className="app">
-      <header className="toolbar">
-        <div className="toolbar-group">
-          <button type="button" onClick={() => void open()} disabled={busy}>
-            Open…
-          </button>
-          <button type="button" onClick={() => void save()} disabled={busy}>
-            {files.canSaveInPlace ? 'Save' : 'Download'}
-          </button>
-          <button type="button" onClick={() => void saveAs()} disabled={busy}>
-            Save As…
-          </button>
-          <span className="doc-name" title={doc.name}>
-            {doc.name}
-            {dirty && <span aria-label="unsaved changes"> •</span>}
-          </span>
-        </div>
-
-        <div className="tabs" role="tablist" aria-label="View">
-          <button
-            type="button"
-            role="tab"
-            id="tab-preview"
-            aria-selected={view === 'preview'}
-            aria-controls="view-panel"
-            onClick={() => {
-              setView('preview')
-            }}
-          >
-            Preview
-          </button>
-          <button
-            type="button"
-            role="tab"
-            id="tab-source"
-            aria-selected={view === 'source'}
-            aria-controls="view-panel"
-            onClick={() => {
-              setView('source')
-            }}
-          >
-            Source
-          </button>
-        </div>
-
-        <div className="toolbar-group toolbar-end">
-          <button type="button" onClick={exportPdf} title="Print or save as PDF (⌘P)">
-            Export PDF…
-          </button>
-        </div>
-      </header>
-
-      {error && (
-        <div role="alert" className="error">
-          {error}
-        </div>
-      )}
+    <div className={appClass}>
+      <Toolbar
+        title={isFresh ? 'MD File Editor' : doc.name}
+        dirty={dirty}
+        busy={busy}
+        view={view}
+        canSaveInPlace={files.canSaveInPlace}
+        isApple={platform.isApple}
+        onViewChange={setView}
+        onOpen={() => void open()}
+        onSave={() => void save()}
+        onSaveAs={() => void saveAs()}
+        onExportPdf={exportPdf}
+      />
 
       <main id="view-panel" role="tabpanel" aria-labelledby={`tab-${view}`}>
-        {view === 'preview' ? (
+        {view === 'source' ? (
+          <textarea
+            aria-label="Document source"
+            className="source"
+            spellCheck={false}
+            // Focus the editor whenever the Source tab is shown.
+            autoFocus
+            placeholder="Start writing Markdown…"
+            value={doc.text}
+            onChange={(e) => {
+              setText(e.target.value)
+            }}
+          />
+        ) : isFresh ? (
+          <div className="scroll-area">
+            <Welcome
+              isApple={platform.isApple}
+              onOpen={() => void open()}
+              onNew={() => {
+                setView('source')
+              }}
+            />
+          </div>
+        ) : (
           <Preview
             key={doc.id}
             text={doc.text}
             openExternalUrl={platform.openExternalUrl}
             onError={reportError}
           />
-        ) : (
-          <textarea
-            aria-label="Document source"
-            className="source"
-            spellCheck={false}
-            value={doc.text}
-            onChange={(e) => {
-              setText(e.target.value)
-            }}
-          />
         )}
       </main>
+
+      {!isFresh && <StatusBar text={doc.text} />}
+
+      {error && (
+        <Toast
+          message={error}
+          onDismiss={() => {
+            setError(null)
+          }}
+        />
+      )}
     </div>
   )
 }

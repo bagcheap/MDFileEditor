@@ -47,4 +47,10 @@ export interface Platform {
   readonly openExternalUrl: (url: string) => Promise<void>
   /** Opens the print dialog (which offers "Save as PDF"). */
   readonly print: () => void
+  /** Sets the window title (shown in Mission Control, the Window menu and browser tabs). */
+  readonly setWindowTitle: (title: string) => void
+  /** True in the macOS desktop app, whose toolbar sits under the window buttons. */
+  readonly macTitleBarOverlay: boolean
+  /** True on Apple platforms, where shortcuts use ⌘ rather than Ctrl. */
+  readonly isApple: boolean
 }
