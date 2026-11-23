@@ -8,6 +8,18 @@ A Markdown viewer and editor for macOS and the web, with live agent editing on t
 - **Design:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - **Security policy:** [SECURITY.md](SECURITY.md)
 
+## Branches
+
+`main` is the stable version. Each phase or fix is developed on its own branch
+(`feature/…`, `fix/…`, `chore/…`, `docs/…`) and merged into `main` after it has been
+tried and approved. To try a branch on your Mac:
+
+```bash
+git fetch && git checkout feature/phase-2-editing && pnpm install --frozen-lockfile
+```
+
+To go back to the stable version: `git checkout main && git pull`.
+
 ## Prerequisites (on each Mac)
 
 1. Xcode Command Line Tools: `xcode-select --install`

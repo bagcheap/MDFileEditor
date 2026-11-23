@@ -18,6 +18,22 @@ The owner's top priorities: **safe to use** and **never lose document content**.
 - **Content preservation:** never decode files lossily; never write non-atomically.
 - **Decisions:** architecture changes update docs/ARCHITECTURE.md and its decision log.
 
+## Branches
+
+`main` holds only reviewed, working code. All work happens on a branch named for
+what it does, and is merged into `main` once the owner has tried it and approved:
+
+| Prefix     | Use                                 | Examples                                                  |
+| ---------- | ----------------------------------- | --------------------------------------------------------- |
+| `feature/` | A roadmap phase or a new capability | `feature/phase-2-editing`, `feature/local-images`         |
+| `fix/`     | A bug fix                           | `fix/pdf-page-margins`                                    |
+| `chore/`   | Tooling, dependencies, CI           | `chore/branch-workflow`, `chore/update-typescript-eslint` |
+| `docs/`    | Documentation only                  | `docs/install-guide`                                      |
+
+Names are lowercase, words joined with hyphens. Start each branch from the latest
+`main`. Don't push to `main` directly; merge a reviewed branch instead. CI runs on
+every branch, and a branch is only merged when CI is green.
+
 ## Before committing
 
 ```bash

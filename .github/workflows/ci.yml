@@ -1,9 +1,9 @@
 name: CI
 
 on:
+  # Every branch is checked on each push; pull requests show these results.
   push:
-    branches: [main, 'claude/**']
-  pull_request:
+    branches: ['**']
   schedule:
     # Weekly (Monday 06:17 UTC): surfaces newly disclosed vulnerabilities in existing deps.
     - cron: '17 6 * * 1'
