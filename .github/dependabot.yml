@@ -8,6 +8,11 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+    ignore:
+      # typescript-eslint supports TypeScript < 6.1 only (see ARCHITECTURE.md decision log).
+      # Remove once a typescript-eslint release supports 7.x.
+      - dependency-name: typescript
+        versions: ['>=6.1.0']
     groups:
       npm-dev:
         dependency-type: development
