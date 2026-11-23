@@ -45,7 +45,9 @@ with the reason they're needed.
   read/write files the user picked in a native dialog this session. No `shell`
   plugin, no general `fs` plugin.
 - **No network by default.** No telemetry. Remote images are blocked unless enabled
-  per document. Links open in the system browser.
+  per document (the CSP permits `https:` images so that opt-in can work; the renderer
+  enforces the default). Links open in the system browser after the URL is validated
+  again in Rust; a navigation guard stops the app window from loading anything else.
 - **Rendering plugins in safe modes:** Mermaid `securityLevel: 'strict'`, KaTeX
   `trust: false`.
 - **Agent access** (Phase 4) is off by default, local-only, token-authenticated,
@@ -66,6 +68,7 @@ with the reason they're needed.
 
 ## 5. Review log
 
-| Date       | Scope                                                                            | Result                                                                                                                                                                                                                         |
-| ---------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 2026-11-22 | Phase 0 (manual review: native commands, path allowlist, CSP, file decoding, CI) | No issues found. `pnpm audit` and `cargo deny` clean (one dev-only advisory in `minimatch` fixed via override). Carry-over for Phase 1: rendered links must open in the system browser and must never navigate the app window. |
+| Date       | Scope                                                                                                                                             | Result                                                                                                                                                                                                                         |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-11-22 | Phase 0 (manual review: native commands, path allowlist, CSP, file decoding, CI)                                                                  | No issues found. `pnpm audit` and `cargo deny` clean (one dev-only advisory in `minimatch` fixed via override). Carry-over for Phase 1: rendered links must open in the system browser and must never navigate the app window. |
+| 2026-11-23 | Phase 1 (manual review: renderer + sanitizer, hast→React conversion, link handling, `open_external_url`, navigation guard, CSP, print permission) | No issues found. Attack-input tests added (script/iframe/svg/event-handler HTML, `javascript:`/`vbscript:`/`data:` links, credential URLs, http/data/local images). `pnpm audit` and `cargo deny` clean.                       |

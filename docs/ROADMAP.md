@@ -14,12 +14,12 @@ working build on web and macOS.
 
 ## Phase 1 — Viewer + PDF
 
-- [ ] remark/rehype rendering with CommonMark + GFM (tables, task lists, strikethrough, autolinks)
-- [ ] Syntax highlighting for code blocks
-- [ ] Sanitization, CSP, remote-image blocking
-- [ ] Links open in the system browser; the app window never navigates away
-- [ ] Light/dark theme, readable typography
-- [ ] PDF export (print stylesheet + native print)
+- [x] remark/rehype rendering with CommonMark + GFM (tables, task lists, strikethrough, autolinks)
+- [x] Syntax highlighting for code blocks
+- [x] Sanitization, CSP, remote-image blocking
+- [x] Links open in the system browser; the app window never navigates away
+- [x] Light/dark theme, readable typography
+- [x] PDF export (print stylesheet + native print)
 
 ## Phase 2 — Editing
 
@@ -45,6 +45,7 @@ working build on web and macOS.
 
 - [ ] Split (side-by-side) view
 - [ ] Math (KaTeX), Mermaid, sanitized embedded HTML
+- [ ] Show local (relative-path) images in the preview
 - [ ] Image paste/drop to `assets/`
 - [ ] More exports: HTML, DOCX, plain text
 - [ ] Outline sidebar, find/replace

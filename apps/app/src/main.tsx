@@ -1,14 +1,15 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createDocumentFileSystem } from '@mdedit/platform'
+import { createPlatform } from '@mdedit/platform'
 import { App } from './App'
 import './styles.css'
+import './markdown.css'
 
 const root = document.getElementById('root')
 if (!root) throw new Error('Missing #root element')
 
 createRoot(root).render(
   <StrictMode>
-    <App fs={createDocumentFileSystem()} />
+    <App platform={createPlatform()} />
   </StrictMode>,
 )

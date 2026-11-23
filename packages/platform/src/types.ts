@@ -36,3 +36,15 @@ export interface DocumentFileSystem {
 export class DocumentFileError extends Error {
   override readonly name = 'DocumentFileError'
 }
+
+/** Everything the app needs from the platform it runs on. */
+export interface Platform {
+  readonly files: DocumentFileSystem
+  /**
+   * Opens an http(s) or mailto URL in the system browser / mail app, never inside
+   * the app window. Callers must pass only URLs classified as external.
+   */
+  readonly openExternalUrl: (url: string) => Promise<void>
+  /** Opens the print dialog (which offers "Save as PDF"). */
+  readonly print: () => void
+}

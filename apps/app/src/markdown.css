@@ -1,0 +1,305 @@
+/* Document typography, modelled on GitHub's Markdown style. */
+.markdown-body {
+  --md-fg: var(--fg);
+  --md-muted: var(--muted);
+  --md-border: var(--border);
+  --md-subtle-bg: #f6f8fa;
+  --md-code-bg: rgb(129 139 152 / 0.12);
+  --md-link: #0969da;
+
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 40px 64px;
+  color: var(--md-fg);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown-body {
+    --md-subtle-bg: #151b23;
+    --md-code-bg: rgb(101 108 118 / 0.2);
+    --md-link: #4493f8;
+  }
+}
+
+.markdown-body > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body :is(p, blockquote, ul, ol, dl, table, pre, details) {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body :is(h1, h2, h3, h4, h5, h6) {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--md-border);
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--md-border);
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-size: 1em;
+}
+
+.markdown-body h5 {
+  font-size: 0.875em;
+}
+
+.markdown-body h6 {
+  font-size: 0.85em;
+  color: var(--md-muted);
+}
+
+.markdown-body a {
+  color: var(--md-link);
+  text-decoration: none;
+}
+
+.markdown-body a:hover {
+  text-decoration: underline;
+}
+
+.markdown-body a.link-unsupported {
+  color: var(--md-muted);
+  text-decoration: underline dotted;
+  cursor: not-allowed;
+}
+
+.markdown-body :is(ul, ol) {
+  padding-left: 2em;
+}
+
+.markdown-body li + li {
+  margin-top: 0.25em;
+}
+
+.markdown-body li.task-list-item {
+  list-style: none;
+}
+
+.markdown-body li.task-list-item input {
+  margin: 0 0.4em 0.2em -1.4em;
+  vertical-align: middle;
+}
+
+.markdown-body blockquote {
+  margin-left: 0;
+  padding: 0 1em;
+  color: var(--md-muted);
+  border-left: 0.25em solid var(--md-border);
+}
+
+.markdown-body hr {
+  height: 0.25em;
+  margin: 24px 0;
+  padding: 0;
+  border: 0;
+  background: var(--md-border);
+}
+
+.markdown-body code {
+  padding: 0.2em 0.4em;
+  font:
+    85% / 1.45 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  background: var(--md-code-bg);
+  border-radius: 6px;
+}
+
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  background: var(--md-subtle-bg);
+  border-radius: 6px;
+}
+
+.markdown-body pre code {
+  padding: 0;
+  font-size: 85%;
+  background: transparent;
+  white-space: pre;
+}
+
+.markdown-body code.raw-html {
+  color: var(--md-muted);
+}
+
+.markdown-body table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow: auto;
+  border-collapse: collapse;
+}
+
+.markdown-body :is(th, td) {
+  padding: 6px 13px;
+  border: 1px solid var(--md-border);
+}
+
+.markdown-body th {
+  font-weight: 600;
+}
+
+.markdown-body tr:nth-child(2n) {
+  background: var(--md-subtle-bg);
+}
+
+.markdown-body img {
+  max-width: 100%;
+}
+
+.markdown-body .image-placeholder {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px dashed var(--md-border);
+  border-radius: 6px;
+  color: var(--md-muted);
+  font-size: 0.9em;
+}
+
+.markdown-body .footnotes {
+  font-size: 0.875em;
+  color: var(--md-muted);
+  border-top: 1px solid var(--md-border);
+  margin-top: 32px;
+}
+
+.markdown-body .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---- Syntax highlighting (highlight.js classes), GitHub colours ---- */
+.markdown-body .hljs-comment,
+.markdown-body .hljs-quote {
+  color: #59636e;
+  font-style: italic;
+}
+.markdown-body :is(.hljs-keyword, .hljs-selector-tag, .hljs-type, .hljs-doctag) {
+  color: #cf222e;
+}
+.markdown-body :is(.hljs-string, .hljs-regexp, .hljs-addition, .hljs-meta .hljs-string) {
+  color: #0a3069;
+}
+.markdown-body :is(.hljs-number, .hljs-literal, .hljs-variable, .hljs-attr, .hljs-symbol) {
+  color: #0550ae;
+}
+.markdown-body :is(.hljs-title, .hljs-title.function_, .hljs-section) {
+  color: #8250df;
+}
+.markdown-body :is(.hljs-built_in, .hljs-name, .hljs-selector-class, .hljs-selector-id) {
+  color: #953800;
+}
+.markdown-body .hljs-deletion {
+  color: #82071e;
+  background: #ffebe9;
+}
+.markdown-body .hljs-meta {
+  color: #59636e;
+}
+
+@media (prefers-color-scheme: dark) {
+  .markdown-body .hljs-comment,
+  .markdown-body .hljs-quote,
+  .markdown-body .hljs-meta {
+    color: #9198a1;
+  }
+  .markdown-body :is(.hljs-keyword, .hljs-selector-tag, .hljs-type, .hljs-doctag) {
+    color: #ff7b72;
+  }
+  .markdown-body :is(.hljs-string, .hljs-regexp, .hljs-addition, .hljs-meta .hljs-string) {
+    color: #a5d6ff;
+  }
+  .markdown-body :is(.hljs-number, .hljs-literal, .hljs-variable, .hljs-attr, .hljs-symbol) {
+    color: #79c0ff;
+  }
+  .markdown-body :is(.hljs-title, .hljs-title.function_, .hljs-section) {
+    color: #d2a8ff;
+  }
+  .markdown-body :is(.hljs-built_in, .hljs-name, .hljs-selector-class, .hljs-selector-id) {
+    color: #ffa657;
+  }
+  .markdown-body .hljs-deletion {
+    color: #ffdcd7;
+    background: #67060c;
+  }
+}
+
+/* ---- Print: light colours, sensible page breaks ---- */
+@media print {
+  .markdown-body {
+    --md-fg: #1f2328;
+    --md-muted: #59636e;
+    --md-border: #d1d9e0;
+    --md-subtle-bg: #f6f8fa;
+    --md-code-bg: rgb(129 139 152 / 0.12);
+    --md-link: #0969da;
+    max-width: none;
+    padding: 0;
+    font-size: 11pt;
+  }
+
+  .markdown-body :is(h1, h2, h3, h4, h5, h6) {
+    break-after: avoid;
+  }
+
+  .markdown-body :is(pre, blockquote, tr, img, li) {
+    break-inside: avoid;
+  }
+
+  .markdown-body pre code {
+    white-space: pre-wrap;
+  }
+
+  .markdown-body table {
+    display: table;
+    width: auto;
+  }
+
+  .markdown-body .hljs-comment,
+  .markdown-body .hljs-quote,
+  .markdown-body .hljs-meta {
+    color: #59636e;
+  }
+  .markdown-body :is(.hljs-keyword, .hljs-selector-tag, .hljs-type, .hljs-doctag) {
+    color: #cf222e;
+  }
+  .markdown-body :is(.hljs-string, .hljs-regexp, .hljs-addition, .hljs-meta .hljs-string) {
+    color: #0a3069;
+  }
+  .markdown-body :is(.hljs-number, .hljs-literal, .hljs-variable, .hljs-attr, .hljs-symbol) {
+    color: #0550ae;
+  }
+  .markdown-body :is(.hljs-title, .hljs-title.function_, .hljs-section) {
+    color: #8250df;
+  }
+  .markdown-body :is(.hljs-built_in, .hljs-name, .hljs-selector-class, .hljs-selector-id) {
+    color: #953800;
+  }
+}

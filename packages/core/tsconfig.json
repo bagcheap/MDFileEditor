@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // core is headless: no DOM types, so accidental DOM use fails to compile.
+    "lib": ["ES2023"],
+    "types": []
+  },
+  "include": ["src"]
+}

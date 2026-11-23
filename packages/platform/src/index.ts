@@ -1,8 +1,9 @@
-import { isTauri } from '@tauri-apps/api/core'
+import { invoke, isTauri } from '@tauri-apps/api/core'
 import { createDesktopFs } from './desktop'
+import { desktopOpenExternalUrl, webOpenExternalUrl } from './shell'
 import type { FileSystemAccessWindow } from './web'
 import { createFallbackFs, createFileSystemAccessFs } from './web'
-import type { DocumentFileSystem } from './types'
+import type { DocumentFileSystem, Platform } from './types'
 
 export * from './types'
 export { MAX_DOCUMENT_BYTES, MARKDOWN_EXTENSIONS, decodeDocument } from './encoding'
@@ -18,4 +19,19 @@ export function createDocumentFileSystem(win: Window = window): DocumentFileSyst
   if (isTauri()) return createDesktopFs()
   if (hasFileSystemAccess(win)) return createFileSystemAccessFs(win)
   return createFallbackFs(win.document)
+}
+
+/**
+ * The platform the app is running on. Printing uses window.print() everywhere:
+ * on macOS, Tauri routes it to the native print dialog.
+ */
+export function createPlatform(win: Window = window): Platform {
+  const desktop = isTauri()
+  return {
+    files: createDocumentFileSystem(win),
+    openExternalUrl: desktop ? desktopOpenExternalUrl(invoke) : webOpenExternalUrl(win),
+    print: () => {
+      win.print()
+    },
+  }
 }

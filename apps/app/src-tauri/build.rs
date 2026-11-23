@@ -6,6 +6,7 @@ fn main() {
             "open_document",
             "save_document",
             "save_document_as",
+            "open_external_url",
         ]),
     ))
     .expect("failed to run tauri-build");

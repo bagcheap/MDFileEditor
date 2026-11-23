@@ -10,7 +10,8 @@ const WEB_CSP = [
   "default-src 'self'",
   "script-src 'self'",
   "style-src 'self'",
-  "img-src 'self' blob: data:",
+  // https: images only load when the user clicks "Load images" (see core render policy).
+  "img-src 'self' blob: data: https:",
   "font-src 'self'",
   "connect-src 'self'",
   "object-src 'none'",

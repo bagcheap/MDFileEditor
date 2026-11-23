@@ -31,6 +31,8 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/unbound-method': 'off',
       '@typescript-eslint/prefer-promise-reject-errors': 'off',
+      // Security tests deliberately contain javascript: URLs as attack inputs.
+      'no-script-url': 'off',
     },
   },
   {

@@ -2,6 +2,8 @@ import { useCallback, useState } from 'react'
 import type { DocumentFileSystem, DocumentRef } from '@mdedit/platform'
 
 export interface DocumentState {
+  /** Changes whenever a different document is loaded. */
+  id: number
   name: string
   /** Null for a new document that has never been saved. */
   ref: DocumentRef | null
@@ -10,14 +12,18 @@ export interface DocumentState {
   text: string
 }
 
-const UNTITLED: DocumentState = { name: 'Untitled.md', ref: null, savedText: '', text: '' }
+const UNTITLED: DocumentState = { id: 0, name: 'Untitled.md', ref: null, savedText: '', text: '' }
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error)
 }
 
 /** Open/edit/save state for the single open document. */
-export function useDocument(fs: DocumentFileSystem, confirmDiscard: () => boolean) {
+export function useDocument(
+  fs: DocumentFileSystem,
+  confirmDiscard: () => boolean,
+  onOpened: () => void,
+) {
   const [doc, setDoc] = useState<DocumentState>(UNTITLED)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -42,14 +48,16 @@ export function useDocument(fs: DocumentFileSystem, confirmDiscard: () => boolea
         if (dirty && !confirmDiscard()) return
         const opened = await fs.openDocument()
         if (!opened) return
-        setDoc({
+        setDoc((d) => ({
+          id: d.id + 1,
           name: opened.name,
           ref: opened.ref,
           savedText: opened.contents,
           text: opened.contents,
-        })
+        }))
+        onOpened()
       }),
-    [run, fs, dirty, confirmDiscard],
+    [run, fs, dirty, confirmDiscard, onOpened],
   )
 
   const saveAs = useCallback(
@@ -76,5 +84,5 @@ export function useDocument(fs: DocumentFileSystem, confirmDiscard: () => boolea
     setDoc((d) => ({ ...d, text }))
   }, [])
 
-  return { doc, dirty, busy, error, open, save, saveAs, setText }
+  return { doc, dirty, busy, error, setError, open, save, saveAs, setText }
 }

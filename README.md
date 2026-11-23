@@ -2,8 +2,9 @@
 
 A Markdown viewer and editor for macOS and the web, with live agent editing on the roadmap.
 
-- **Status:** Phase 0 (foundation). The app opens, edits (as plain text) and saves `.md` files.
-  See [docs/ROADMAP.md](docs/ROADMAP.md).
+- **Status:** Phase 1 (viewer + PDF). Opens `.md` files and shows them formatted, edits
+  them as plain text (Source tab), saves, and exports to PDF. Try
+  [examples/feature-tour.md](examples/feature-tour.md). See [docs/ROADMAP.md](docs/ROADMAP.md).
 - **Design:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - **Security policy:** [SECURITY.md](SECURITY.md)
 
