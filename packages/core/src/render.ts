@@ -88,6 +88,19 @@ function describeLink(link: Element): void {
   }
 }
 
+/** Exposes a code block's language (from `language-xyz`) for display as a label. */
+function labelCodeLanguage(pre: Element): void {
+  const code = pre.children.find((c): c is Element => c.type === 'element' && c.tagName === 'code')
+  const classes = code?.properties.className
+  if (!Array.isArray(classes)) return
+  for (const name of classes) {
+    if (typeof name === 'string' && name.startsWith('language-')) {
+      pre.properties.dataLanguage = name.slice('language-'.length)
+      return
+    }
+  }
+}
+
 /** Applies the link and image policies to sanitized output. */
 function applyPolicies(tree: Root, allowRemote: boolean): number {
   let blocked = 0
@@ -122,6 +135,7 @@ function applyPolicies(tree: Root, allowRemote: boolean): number {
         return
       }
       if (child.tagName === 'a') describeLink(child)
+      if (child.tagName === 'pre') labelCodeLanguage(child)
       visit(child)
     })
   }

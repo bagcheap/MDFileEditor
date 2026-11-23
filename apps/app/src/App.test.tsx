@@ -18,15 +18,21 @@ function fakePlatform(contents = '# Notes', files: Partial<DocumentFileSystem> =
     },
     openExternalUrl: vi.fn(() => Promise.resolve()),
     print: vi.fn(),
+    setWindowTitle: vi.fn((title: string) => {
+      document.title = title
+    }),
+    macTitleBarOverlay: false,
+    isApple: true,
   } satisfies Platform
   return platform
 }
 
 const source = () => screen.getByLabelText<HTMLTextAreaElement>('Document source')
 const tab = (name: string) => screen.getByRole('tab', { name })
+const button = (name: string) => screen.getByRole('button', { name })
 
 async function openDoc() {
-  fireEvent.click(screen.getByText('Open…'))
+  fireEvent.click(button('Open…'))
   await screen.findByText('notes.md')
   await waitFor(() => {
     expect(document.querySelector('.empty-hint')).toBeNull()
@@ -52,7 +58,7 @@ describe('App: files', () => {
     fireEvent.change(source(), { target: { value: '# Notes\nmore' } })
     expect(screen.getByLabelText('unsaved changes')).toBeTruthy()
 
-    fireEvent.click(screen.getByText('Save'))
+    fireEvent.click(button('Save'))
     await waitFor(() => {
       expect(screen.queryByLabelText('unsaved changes')).toBeNull()
     })
@@ -72,7 +78,7 @@ describe('App: files', () => {
     render(<App platform={platform} />)
     fireEvent.click(tab('Source'))
     fireEvent.change(source(), { target: { value: 'hello' } })
-    fireEvent.click(screen.getByText('Save'))
+    fireEvent.click(button('Save'))
     await waitFor(() => {
       expect(platform.files.saveDocumentAs).toHaveBeenCalledWith('hello', 'Untitled.md')
     })
@@ -83,7 +89,7 @@ describe('App: files', () => {
       openDocument: () => Promise.reject(new Error('File is not valid UTF-8 text')),
     })
     render(<App platform={platform} />)
-    fireEvent.click(screen.getByText('Open…'))
+    fireEvent.click(button('Open…'))
     expect((await screen.findByRole('alert')).textContent).toMatch(/UTF-8/)
   })
 
@@ -93,7 +99,7 @@ describe('App: files', () => {
     render(<App platform={platform} />)
     fireEvent.click(tab('Source'))
     fireEvent.change(source(), { target: { value: 'draft' } })
-    fireEvent.click(screen.getByText('Open…'))
+    fireEvent.click(button('Open…'))
     await waitFor(() => {
       expect(confirm).toHaveBeenCalled()
     })
@@ -101,6 +107,79 @@ describe('App: files', () => {
     expect(source().value).toBe('draft')
   })
 })
+
+describe('App: chrome', () => {
+  it('starts on a welcome screen that can open a file or start a new one', async () => {
+    const platform = fakePlatform()
+    render(<App platform={platform} />)
+    expect(screen.getByRole('heading', { name: 'MD File Editor' })).toBeTruthy()
+    expect(screen.queryByLabelText('Document statistics')).toBeNull()
+
+    fireEvent.click(button('New Document'))
+    expect(tab('Source').getAttribute('aria-selected')).toBe('true')
+    expect(document.activeElement).toBe(source())
+
+    fireEvent.click(tab('Preview'))
+    fireEvent.click(tab('Source'))
+    fireEvent.change(source(), { target: { value: 'x' } })
+    fireEvent.click(tab('Preview'))
+    expect(screen.queryByRole('heading', { name: 'MD File Editor' })).toBeNull()
+
+    await openDocFrom(platform, 'Open…')
+  })
+
+  it('shows word count and reading time for the document', async () => {
+    render(<App platform={fakePlatform('# Hello\n\nThree more words')} />)
+    await openDoc()
+    expect(screen.getByLabelText('Document statistics').textContent).toContain('4 words')
+    expect(screen.getByLabelText('Document statistics').textContent).toContain('1 min read')
+  })
+
+  it('offers Save As in the ⋯ menu', async () => {
+    const platform = fakePlatform()
+    render(<App platform={platform} />)
+    await openDoc()
+    fireEvent.click(button('More'))
+    fireEvent.click(screen.getByRole('menuitem', { name: /Save As/ }))
+    await waitFor(() => {
+      expect(platform.files.saveDocumentAs).toHaveBeenCalledWith('# Notes', 'notes.md')
+    })
+    expect(screen.queryByRole('menu')).toBeNull()
+  })
+
+  it('closes the ⋯ menu with Escape', () => {
+    render(<App platform={fakePlatform()} />)
+    fireEvent.click(button('More'))
+    expect(screen.getByRole('menu')).toBeTruthy()
+    fireEvent.keyDown(document, { key: 'Escape' })
+    expect(screen.queryByRole('menu')).toBeNull()
+  })
+
+  it('lets errors be dismissed', async () => {
+    const platform = fakePlatform('', { openDocument: () => Promise.reject(new Error('Nope')) })
+    render(<App platform={platform} />)
+    fireEvent.click(button('Open…'))
+    await screen.findByRole('alert')
+    fireEvent.click(button('Dismiss'))
+    expect(screen.queryByRole('alert')).toBeNull()
+  })
+
+  it('sets the window title to the document name', async () => {
+    const platform = fakePlatform()
+    render(<App platform={platform} />)
+    expect(platform.setWindowTitle).toHaveBeenLastCalledWith('MD File Editor')
+    await openDoc()
+    expect(platform.setWindowTitle).toHaveBeenLastCalledWith('notes')
+  })
+})
+
+async function openDocFrom(platform: ReturnType<typeof fakePlatform>, label: string) {
+  vi.spyOn(window, 'confirm').mockReturnValue(true)
+  fireEvent.click(button(label))
+  await waitFor(() => {
+    expect(platform.files.openDocument).toHaveBeenCalled()
+  })
+}
 
 describe('App: links', () => {
   it('opens web links outside the app and never navigates the window', async () => {
@@ -141,7 +220,7 @@ describe('App: remote images', () => {
     expect(document.querySelector('.markdown-body img')).toBeNull()
     expect(screen.getByRole('status').textContent).toMatch(/1 image from the internet/)
 
-    fireEvent.click(screen.getByText('Load images'))
+    fireEvent.click(button('Load images'))
     expect(document.querySelector('.markdown-body img')?.getAttribute('src')).toBe(
       'https://example.com/c.png',
     )
@@ -155,7 +234,7 @@ describe('App: PDF export', () => {
     render(<App platform={platform} />)
     await openDoc()
     fireEvent.click(tab('Source'))
-    fireEvent.click(screen.getByText('Export PDF…'))
+    fireEvent.click(button('Export PDF…'))
     expect(platform.print).toHaveBeenCalledOnce()
     expect(tab('Preview').getAttribute('aria-selected')).toBe('true')
   })

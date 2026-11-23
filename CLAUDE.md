@@ -1,6 +1,7 @@
 # Working on MD File Editor
 
-Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [SECURITY.md](SECURITY.md) first.
+Read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [SECURITY.md](SECURITY.md) first,
+and [docs/DESIGN.md](docs/DESIGN.md) before changing anything visual.
 The owner's top priorities: **safe to use** and **never lose document content**.
 
 ## Rules
